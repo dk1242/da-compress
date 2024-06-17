@@ -3,7 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <map>
+#include <string>
 #include "huffmanCodingTree.cpp"
+
 using namespace std;
 
 struct CompareNodes
@@ -52,7 +55,7 @@ void traverseTree(HuffmanBaseNode *root, std::map<char, pair<int, string>> &look
     }
     else
     {
-        traverseTree(root->getLeft(), lookup, (curr + "0"));
+        traverseTree(root->getLeft(), lookup, curr + "0");
         traverseTree(root->getRight(), lookup, curr + "1");
     }
 }
@@ -92,12 +95,16 @@ void createCompressedFile(std::map<char, pair<int, string>> &lookup, std::ifstre
         char bitBuffer = 0;
         int bitCount = 0;
         char ch;
-        if (file.get(ch))
+        while (file.get(ch))
         {
             string compressedBitsRepresentation = lookup[ch].second;
-            std::cout<<compressedBitsRepresentation<<"\n";
-
+            // cout << ch << " " << compressedBitsRepresentation << " " << compressedBitsRepresentation.length() << "\n";
+            for (int i = 0; i < compressedBitsRepresentation.length(); i++)
+            {
+                writeBit(outFile, compressedBitsRepresentation[i] - '0', bitBuffer, bitCount);
+            }
         }
+        flushBits(outFile, bitBuffer, bitCount);
         outFile.close();
     }
     else
