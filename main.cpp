@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
         //     if (frequency[i])
         //         cout << i << " " << char(i) << " " << frequency[i] << "\n";
         // }
-        cout << "Building tree------------------------------->\n";
+        // cout << "Building tree------------------------------->\n";
         HuffmanBaseNode *root = buildTree(frequency);
         std::map<char, pair<int, string>> lookup;
         createLookupTable(root, lookup);
