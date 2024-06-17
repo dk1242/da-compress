@@ -20,7 +20,29 @@ void calculateFrequency(vector<int> &frequency, std::ifstream &file)
         }
     }
 }
+bool ifCompressed(string filename)
+{
+    std::ifstream file(filename, std::ios::binary | ios::in);
+    if (!file)
+    {
+        std::cerr << "Error: could not open file\n";
+        return 1;
+    }
 
+    char ch;
+    string curr = "";
+    while (file.get(ch) && curr.length() < 15)
+    {
+        curr += ch;
+        size_t found = curr.find("decode_start,");
+        if (found != string::npos)
+        {
+            file.close();
+            return true;
+        }
+    }
+    return false;
+}
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -42,7 +64,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    bool toCompress = false;
+    bool toCompress = !ifCompressed(filename);
     if (toCompress)
     {
         std::ifstream file(filename);

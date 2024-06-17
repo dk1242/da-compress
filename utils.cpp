@@ -165,10 +165,10 @@ void createDecompressedFile(ifstream &file, std::map<string, char> &lookup)
     std::ofstream outFile("test_decompressed.txt");
     if (outFile.is_open())
     {
-        for (auto it : lookup)
-        {
-            cout << it.second << " " << it.first << "\n";
-        }
+        // for (auto it : lookup)
+        // {
+        //     cout << it.second << " " << it.first << "\n";
+        // }
         char ch;
         string curr = "";
         int cnt = 0;
