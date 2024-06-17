@@ -92,6 +92,15 @@ void createCompressedFile(std::map<char, pair<int, string>> &lookup, std::ifstre
     std::ofstream outFile("test_compressed", std::ios::out | std::ios::binary);
     if (outFile.is_open())
     {
+        outFile.write("decode_start_", 13);
+        for (auto it : lookup)
+        {
+            string strch(1, it.first);
+            string kv =  strch + ": " + it.second.second + ",";
+            // cout<<kv<<"\n";
+            outFile.write(kv.c_str(), kv.size());
+        }
+        outFile.write("_decode_end\n", 12);
         char bitBuffer = 0;
         int bitCount = 0;
         char ch;

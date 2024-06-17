@@ -54,20 +54,19 @@ int main(int argc, char *argv[])
         calculateFrequency(frequency, file);
         file.clear();
         file.seekg(0);
-        for (int i = 0; i < 128; i++)
-        {
-            if (frequency[i])
-                cout << i << " " << char(i) << " " << frequency[i] << "\n";
-        }
+        // for (int i = 0; i < 128; i++)
+        // {
+        //     if (frequency[i])
+        //         cout << i << " " << char(i) << " " << frequency[i] << "\n";
+        // }
         cout << "Building tree------------------------------->\n";
         HuffmanBaseNode *root = buildTree(frequency);
         std::map<char, pair<int, string>> lookup;
         createLookupTable(root, lookup);
         createCompressedFile(lookup, file);
-        // for (auto &it : lookup)
-        // {
-        //     cout << it.first << " " << it.second.first << " " << it.second.second << " " << it.second.second.size() << "\n";
-        // }
+    }else{
+        std::map<char, pair<int, string>> lookup;
+        // getLookupTable(file, lookup);
     }
     file.close();
     return 0;
