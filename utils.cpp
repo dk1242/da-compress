@@ -88,9 +88,9 @@ void flushBits(std::ofstream &outFile, char &bitBuffer, int &bitCount)
         bitCount = 0;
     }
 }
-void createCompressedFile(std::map<char, pair<int, string>> &lookup, std::ifstream &file)
+void createCompressedFile(std::map<char, pair<int, string>> &lookup, std::ifstream &file, string filename)
 {
-    std::ofstream outFile("test_compressed", std::ios::out | std::ios::binary);
+    std::ofstream outFile("compressed_" + filename, std::ios::out | std::ios::binary);
     if (outFile.is_open())
     {
         outFile.write("decode_start,", 13);
@@ -116,6 +116,7 @@ void createCompressedFile(std::map<char, pair<int, string>> &lookup, std::ifstre
         }
         flushBits(outFile, bitBuffer, bitCount);
         outFile.close();
+        std::cout << "Compressed file generated: " << "compressed_" << filename << "\n";
     }
     else
     {
@@ -160,9 +161,9 @@ void getLookupTable(ifstream &file, std::map<string, char> &lookup)
         lookup[binaryString] = character;
     }
 }
-void createDecompressedFile(ifstream &file, std::map<string, char> &lookup)
+void createDecompressedFile(string filename, ifstream &file, std::map<string, char> &lookup)
 {
-    std::ofstream outFile("test_decompressed.txt");
+    std::ofstream outFile("decompressed_" + filename + ".txt");
     if (outFile.is_open())
     {
         // for (auto it : lookup)
@@ -184,6 +185,7 @@ void createDecompressedFile(ifstream &file, std::map<string, char> &lookup)
                 }
             }
         }
+        std::cout << "Decompressed file generated: " << "decompressed" << filename << ".txt" << "\n";
     }
     else
     {

@@ -20,34 +20,40 @@ void calculateFrequency(vector<int> &frequency, std::ifstream &file)
         }
     }
 }
-bool ifCompressed(string filename)
+int ifCompressed(string filename)
 {
     std::ifstream file(filename, std::ios::binary | ios::in);
     if (!file)
     {
-        std::cerr << "Error: could not open file\n";
-        return 1;
+        // std::cerr << "Error: could not open file a\n";
+        return 2;
     }
-
-    char ch;
-    string curr = "";
-    while (file.get(ch) && curr.length() < 15)
+    else
     {
-        curr += ch;
-        size_t found = curr.find("decode_start,");
-        if (found != string::npos)
+        char ch;
+        string curr = "";
+        while (file.get(ch) && curr.length() < 15)
         {
-            file.close();
-            return true;
+            curr += ch;
+            size_t found = curr.find("decode_start,");
+            if (found != string::npos)
+            {
+                file.close();
+                return true;
+            }
         }
+        return false;
     }
-    return false;
+    return 2;
 }
 int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        std::cerr << "Usage: adcd [--option] <filename>" << "\n";
+        std::cerr << "Usage: dacompress [--option] <filename>" << "\n";
+        std::cerr << "options:" << "\n";
+        std::cerr << "--compress: to compress an uncompressed file" << "\n";
+        std::cerr << "--decompress: to decompress a compressed file" << "\n";
         return 1;
     }
     string option = "";
@@ -64,8 +70,23 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    bool toCompress = !ifCompressed(filename);
-    if (toCompress)
+    int isCompressed = ifCompressed(filename);
+    if (isCompressed == 2)
+    {
+        std::cerr << "Error: Could not open file. Provide correct file path.\n";
+        return 1;
+    }
+    if (option == "--compress" && isCompressed)
+    {
+        std::cerr << "Upload an uncompressed file while using --compress\n";
+        return 1;
+    }
+    if (option == "--decompress" && !isCompressed)
+    {
+        std::cerr << "Upload a compressed file while using --decompress\n";
+        return 1;
+    }
+    if (!isCompressed)
     {
         std::ifstream file(filename);
         if (!file)
@@ -86,7 +107,7 @@ int main(int argc, char *argv[])
         HuffmanBaseNode *root = buildTree(frequency);
         std::map<char, pair<int, string>> lookup;
         createLookupTable(root, lookup);
-        createCompressedFile(lookup, file);
+        createCompressedFile(lookup, file, filename);
         file.close();
     }
     else
@@ -99,7 +120,7 @@ int main(int argc, char *argv[])
         }
         std::map<string, char> lookup;
         getLookupTable(file, lookup);
-        createDecompressedFile(file, lookup);
+        createDecompressedFile(filename, file, lookup);
         file.close();
     }
     return 0;

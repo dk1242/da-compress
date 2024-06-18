@@ -4,8 +4,9 @@ dacompress: main.o
 	
 main.o: main.cpp
 	@g++ -c main.cpp
-	# @echo "Installing dkwc..."
-	# @sudo cp dkwc /usr/local/bin/dkwc
+	@echo "Installing dacompress..."
+	@sudo cp dacompress /usr/local/bin/dacompress
 
 clean:
-	@rm -f *.o dkwc
+	@rm -f *.o dacompress
+	@sudo rm /usr/local/bin/dacompress
